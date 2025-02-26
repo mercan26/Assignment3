@@ -1,41 +1,29 @@
-function Swim() {
-    this.calc = (weight, distance, time) => {
-        const weightKg = weight / 2.2;
-        return (6 * weightKg * 3.5) / 200 * time;
+function Exercise(type, customFormula) {
+  this.type = type;
+
+  const walking = function () {
+    this.calculate = function(weight, distance, time) {
+      return (0.035 * weight + Math.pow(distance, 2) / height * 0.029) * time;
     };
-}
+  };
 
-function Walk() {
-    this.calc = (weight, distance, time) => {
-        return (0.035 * weight + (Math.pow(distance, 2) / weight) * 0.029) * time;
+  const running = function () {
+    this.calculate = function(weight, distance, time) {
+      return (0.075 * weight + 0.2 * distance * 0.029) * time;
     };
-}
+  };
 
-function Run() {
-    this.calc = (weight, distance, time) => {
-        return (0.075 * weight + (Math.pow(distance, 2) / weight) * 0.05) * time;
+  if (type === "walking") {
+    this.activity = new walking();
+  } else if (type === "running") {
+    this.activity = new running();
+  } else if (customFormula && typeof customFormula === 'function') {
+    this.activity = {
+      calculate: customFormula,
     };
+  } else {
+    throw new Error("Invalid activity type or custom formula.");
+  }
 }
-
-function Exercise(activityType) {
-    if (activityType === "walking") {
-        this.exercise = new Walk();
-        this.name = "Walking";
-    } else if (activityType === "running") {
-        this.exercise = new Run();
-        this.name = "Running";
-    } else if (activityType === "swimming") {
-        this.exercise = new Swim();
-        this.name = "Swimming";
-    } else {
-        throw new Error("Invalid activity type");
-    }
-}
-
-Exercise.prototype.calculateCalories = function(weight, distance, time) {
-    return this.exercise.calc(weight, distance, time);
-};
 
 module.exports = Exercise;
-
-
